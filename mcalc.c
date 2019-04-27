@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <limits.h>
 
 #include <ncurses.h>
@@ -749,6 +748,15 @@ void te_print(const te_expr *n) {
 int main( int argc, char *argv[])
 {
 
+   char linetocalc[2040]; 
+   strncpy( linetocalc, "", 2040 );
+
+     ////////////////////////////////////////////////////////
+     if ( argc == 3)
+     if ( strcmp( argv[1] , "--input" ) ==  0 ) 
+     {
+         strncpy( linetocalc, argv[ 2 ] , PATH_MAX );
+     }
 
     ////////////////////////////////////////////////////////
     if ( argc == 2)
@@ -761,24 +769,46 @@ int main( int argc, char *argv[])
 
    int ch = 0 ; 
    char charo[2040];
-   char linetocalc[2040]; strncpy( linetocalc, "", 2040 );
    int gameover = 0;
+
+   int foo;  char str[2040]; int trg = 0;
    initscr();
    keypad(stdscr, true);
    noecho();
    while( gameover ==  0 )
    {
     erase(); getmaxyx( stdscr, rows, cols );
+
     mvprintw( rows-1, cols-4, "%d", ch );
     mvprintw( 0, 0, "|MCALC, Tiny Calculator|" );
     mvprintw( 2, 0, "%s", linetocalc );
+
+
     ch = getch();
     if ( ch == 'Q' )  
     {
-      gameover = 1; 
+       gameover = 1; 
     }
-    else if ( ch == KEY_BACKSPACE )  
- 	 strncpy( linetocalc, "" ,  2040 );
+
+    else if ( ch == 2 ) 
+    {
+	strncpy( linetocalc, "" , 2040 );
+    }
+
+    else if ( ch == KEY_BACKSPACE ) 
+    {
+        trg = 0; strncpy( str, "", 2040 );
+
+        for( foo = 0 ; linetocalc[ foo ] != '\0' ; foo++)
+            str[trg++]=linetocalc[ foo ];
+	    //strncpy( strmsg, strcut( strmsg, 1 , strlen( strmsg ) -1 )  ,  PATH_MAX );
+        trg--;
+
+        str[trg]='\0';
+	strncpy( linetocalc, str , 2040 );
+    }
+
+
     else if ( ch == 10 )  
     {
       erase();
